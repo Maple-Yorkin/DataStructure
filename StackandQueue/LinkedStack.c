@@ -17,20 +17,27 @@ int IsEmpty(LiStack stack)
         return true;
     return false;
 }
+int GetTop(LiStack stack)
+{
+    if (IsEmpty(stack) == true)
+        return -1;
+    return stack->data;
+}
+int Pop(LiStack *stack)
+{
+    if (IsEmpty(*stack) == true)
+    {
+        return -1;
+    }
+    int temp = GetTop(*stack);
+    *stack = (*stack)->next;
+    return temp;
+}
 
 void InitLiStack(LiStack *stack)
 {
     *stack = NULL;
 }
-
-// void DestroyLiStack(LiStack *stack)
-// {
-//     while (!IsEmpty(*stack))
-//     {
-//         Pop(stack);
-//     }
-//     (*stack)->next = NULL;
-// }
 
 int Push(LiStack *stack, int e)
 {
@@ -51,28 +58,9 @@ int Push(LiStack *stack, int e)
         p->next = *stack;
         *stack = p;
     }
-
-    *stack = p;
     return 1;
 }
 
-// int Pop(LiStack *stack)
-// {
-//     if (IsEmpty(*stack) == true)
-//     {
-//         return false;
-//     }
-//     int temp = GetTop(stack);
-//     stack = (*stack)->next;
-//     return temp;
-// }
-
-int GetTop(LiStack stack)
-{
-    if (IsEmpty(stack) == true)
-        return -1;
-    return stack->data;
-}
 int e = 2;
 LiStack stack;
 
@@ -81,6 +69,8 @@ int main()
 
     InitLiStack(&stack);
     Push(&stack, e);
+    printf("当前栈顶为：%d", GetTop(stack));
     Push(&stack, 4);
+    Pop(&stack);
     printf("当前栈顶为：%d", GetTop(stack));
 }
