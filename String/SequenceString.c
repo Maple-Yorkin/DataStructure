@@ -45,6 +45,37 @@ int StrCompare(SString S, SString T)
     // 如果扫描过的所有字符都相同，就看谁更长
     return S.length - T.length;
 }
+
+// 朴素模式匹配算法
+int Match(SString S, SString T)
+{
+    int i = 1;
+    int j = 1;
+    // 如果主串指针i的位置不超过主串的长度，而且模式串指针j的位置不超过模式串的长度就进行匹配
+    while (i <= S.length && j <= T.length)
+    {
+        if (S.ch[i] == T.ch[j])
+        {
+            i++;
+            j++;
+        }
+        else
+        {
+            // 指针后退重新开始匹配
+            i = i - j + 2;
+            j = 1;
+        }
+    }
+    if (j > T.length)
+    {
+        return i - T.length;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 int Index(SString S, SString T)
 {
     int i = 1, n = StrLength(S), m = StrLength(T);
