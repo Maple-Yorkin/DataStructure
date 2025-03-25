@@ -88,3 +88,57 @@ void BFS(Graph G, int v)
         }
     }
 }
+
+void DFSTraverse(Graph G)
+{
+    for (int v = 0; v < G.vexnum; v++)
+    {
+        visited[v] = false;
+    }
+    for (int v = 0; v < G.vexnum; v++)
+    {
+        if (!visited[v])
+            DFS(G, v);
+    }
+}
+void DFS(Graph G, int v)
+{
+    // 从顶点v触发，深度优先遍历图G
+    visit(v);          // 访问顶点v
+    visited[v] = true; // 设置访问标记
+    for (int w = FirstNeighbor(G, v); w >= 0; w = NextNeighbor(G, v, w))
+    {
+        if (!visited[w]) // w为u的尚未访问的邻接顶点
+        {
+            DFS(G, w);
+        }
+    }
+}
+int d[Maxsize], path[Maxsize];
+// 求顶点u到其他顶点的最短路径
+void BFS_MIN_Distance(Graph G, int u)
+{
+    // d[i]表示从u到i节点的最短路径
+    for (int i = 0; i < G.vexnum; i++)
+    {
+        d[i] = 0x3f3f3f3f; // 初始化路径长度
+        path[i] = -1;      // 最短路径从哪个顶点过来
+    }
+    d[u] = 0;
+    visited[u] = true;
+    enqueue(&Q, u);
+    while (!isEmpty(&Q)) // BFS算法主过程
+    {
+        dequeue(&Q); // 队头元素u出队
+        for (int w = FirstNeighbor(G, u); w >= 0; w = NextNeighbor(G, u, w))
+        {
+            if (!visited[w]) // w为u的尚未访问的邻接顶点
+            {
+                d[w] = d[u] + 1;   // 路径长度+1
+                path[w] = u;       // 最短路径应从u到w
+                visited[w] = true; // 设已访问标记
+                enqueue(&Q, w);    // 顶点w入队
+            }
+        }
+    }
+}
