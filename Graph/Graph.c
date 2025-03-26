@@ -142,3 +142,25 @@ void BFS_MIN_Distance(Graph G, int u)
         }
     }
 }
+// Floyd算法核心代码
+int A[Maxsize][Maxsize];
+int Fpath[Maxsize][Maxsize];
+int n;
+// 根据图的信息初始化矩阵A和path
+void Floyd()
+{
+    for (int k = 0; k < n; k++) // 若以Vk作为中转点
+    {
+        for (int i = 0; i < n; i++) // 每次遍历整个矩阵，i为行号，j为列号
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (A[i][j] > A[i][k] + A[k][j]) // 以Vk为中转点的路径更短
+                {
+                    A[i][j] = A[i][k] + A[k][j]; // 更新最短路径长度
+                    Fpath[i][j] = k;             // 中转点
+                }
+            }
+        }
+    }
+}
