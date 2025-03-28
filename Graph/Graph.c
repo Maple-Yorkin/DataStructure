@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../StackandQueue/SequenceQueue.c"
+#include "../StackandQueue/SequenceStack.c"
 #include <stdlib.h>
 #define true 1
 #define false 0
@@ -50,7 +51,7 @@ typedef struct Graph
     int vexnum; // 节点数量
     /* data */
 } Graph;
-void BFSTraverse(Graph G)
+void BFSTraverse(MGraph G)
 {
     for (int i = 0; i < G.vexnum; i++)
     {
@@ -66,7 +67,7 @@ void BFSTraverse(Graph G)
         }
     }
 }
-void BFS(Graph G, int v)
+void BFS(MGraph G, int v)
 {
     // 从顶点v出发，对图G进行广度优先搜索
     visit(v);          // 访问初始顶点v
@@ -89,7 +90,7 @@ void BFS(Graph G, int v)
     }
 }
 
-void DFSTraverse(Graph G)
+void DFSTraverse(MGraph G)
 {
     for (int v = 0; v < G.vexnum; v++)
     {
@@ -101,7 +102,7 @@ void DFSTraverse(Graph G)
             DFS(G, v);
     }
 }
-void DFS(Graph G, int v)
+void DFS(MGraph G, int v)
 {
     // 从顶点v触发，深度优先遍历图G
     visit(v);          // 访问顶点v
@@ -161,6 +162,60 @@ void Floyd()
                     Fpath[i][j] = k;             // 中转点
                 }
             }
+        }
+    }
+}
+// 拓扑排序
+typedef struct ArcNode // 边表节点
+{
+    int adjvex;              // 该弧所指向的顶点的位置
+    struct ArcNode *nextarc; // 指向下一条弧的指针
+    // InfoType info; //网的边权值
+} ArcNode;
+typedef struct VNode // 顶点表节点
+{
+    VertexType data;   // 顶点信息
+    ArcNode *firstarc; // 指向第一条依附该节点的弧的指针
+} VNode, AdjList[Maxsize];
+typedef struct
+{
+    AdjList vertices;   // 邻接表
+    int vexnum, arcnum; // 图的顶点数和弧数
+} VGraph;               // VGraph是以邻接表存储的图类型
+SqStack S;              // 用来保存当前度为0的顶点，也可以用队列、数组等来进行代替
+int indegree[Maxsize];  // 用于记录每一个节点当前的入度
+int print[Maxsize];     // 用于记录得到的拓扑排序序列
+int v;
+int TypologicalSort(VGraph G)
+{
+    InitStack(S); // 初始化栈，存储入度为0的顶点
+    for (int i = 0; i < G.vexnum; i++)
+    {
+        if (indegree[i] == 0)
+            push(S, i);      // 将所有入度为0的顶点进栈
+        int count = 0;       // 计数，记录当前已经输出的顶点数
+        while (!isEmpty(&S)) // 栈不空，则存在入度为0的顶点
+        {
+            Pop(&S, i);         // 栈顶元素出栈
+            print[count++] = i; // 输出顶点i
+            for (ArcNode *p = G.vertices[i].firstarc; p; p = p->nextarc)
+
+            {
+                // 将所有i指向的顶点的入度减一，并且将入度减为0的顶点压入栈s
+                v = p->adjvex;
+                if (!(--indegree[v]))
+                {
+                    Push(&S, v); // 入度为0则入栈
+                }
+            }
+        }
+        if (count < G.vexnum)
+        {
+            return false; // 排序失败，有向图中有回路
+        }
+        else
+        {
+            return true; // 拓扑排序成功
         }
     }
 }
