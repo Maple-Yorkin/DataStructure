@@ -219,3 +219,16 @@ int TypologicalSort(VGraph G)
         }
     }
 }
+// 深度优先算法进行逆拓扑排序
+void InverseTypologicalSortByDFS(MGraph G, int v)
+{
+    // 从顶点v出发，深度优先遍历图G
+    visited[v] = true; // 设置已访问标记
+
+    for (int w = FirstNeighbor(G, v); w >= 0; w = NextNeighbor(G, v, w))
+        if (!visited[w]) // w为u的尚未访问的邻接结点
+        {
+            InverseTypologicalSortByDFS(G, w);
+        }
+    pt(v); // 输出顶点
+}
