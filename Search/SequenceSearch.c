@@ -70,3 +70,24 @@ BSTNode *BST_Recursion_Search(BSTree T, int key)
         return BST_Recursion_Search(T->rchild, key);
     }
 }
+// 二叉排序树的插入，插入关键字为k的新结点（递归实现）
+int BST_Insert(BSTree T, int k)
+{
+    if (T == NULL) // 原树为空，新插入的节点为根节点
+    {
+        T = (BSTree)malloc(sizeof(BSTNode));
+        T->key = k;
+        T->lchild = T->rchild = NULL;
+        return 1; // 插入成功
+    }
+    else if (k == T->key) // 如果存在相同关键字的结点则插入失败
+        return 0;
+    else if (k < T->key) // 进入左子树
+    {
+        return BST_Insert(T->lchild, k);
+    }
+    else // 进入右子树
+    {
+        return BST_Insert(T->rchild, k);
+    }
+}
