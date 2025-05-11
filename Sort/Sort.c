@@ -146,3 +146,73 @@ void SelectSort(int A[], int n)
             swap(A[i], A[min]); // 封装的swap()函数内部共移动元素三次
     }
 }
+// 建立大根堆
+void BuildMaxHeap(int A[], int len)
+{
+    for (int i = len / 2; i > 0; i--) // 从后往前调整所有非终端节点
+    {
+        HeadAdjust(A, i, len);
+    }
+}
+// 将以k为根的子树调整为大根堆
+void HeadAdjust(int A[], int k, int len)
+{
+    A[0] = A[k];                          // A[0]暂存子树的根节点
+    for (int i = 2 * k; i <= len; i *= 2) // 沿着key较大的子节点向下筛选
+    {
+        if (i < len && A[i] < A[i + 1])
+        {
+            i++; // 取key较大的子节点的下标
+        }
+        if (A[0] >= A[i])
+            break; // 筛选结束
+        else
+        {
+            A[k] = A[i]; // 将A[i]调整到双亲结点上
+            k = i;       // 修改k值，以便继续乡下筛选
+        }
+    }
+    A[k] = A[0]; // 被筛选结点的值放入最终位置
+}
+// 堆排序的逻辑
+void HeapSort(int A[], int len)
+{
+    BuildMaxHeap(A, len);         // 初始化大根堆
+    for (int i = len; i > 1; i--) // n-1趟的交换和建堆过程
+    {
+        swap(A[i], A[1]);        // 堆顶元素和堆底元素互换
+        HeadAdjust(A, 1, i - 1); // 把剩余的待排序元素整理成堆
+    }
+}
+// 归并排序
+void Merge(int A[], int low, int mid, int high, int n)
+{
+    // 将有序的A[low...mid]和A[mid+1...high]两部分归并
+    int *B = (int *)malloc(n * sizeof(int)); // 辅助数组B
+    int i, j, k;
+    for (k = low; k <= high; k++)
+    {
+        B[k] = A[k]; // 将A中所有元素复制到B中
+    }
+    for (i = low, j = mid + 1, k = i; i <= mid && j <= high; k++)
+    {
+        if (B[i] <= B[j])
+            A[k] = B[i++]; // 将较小的值复制到A中
+        else
+            A[k] = B[j++];
+    }
+    while (i <= mid)
+        A[k++] = B[i++];
+    while (j <= high)
+        A[k++] = B[j++];
+}
+void MergeSort(int A[], int low, int high)
+{
+    if (low < high)
+    {
+        int mid = (low + high) / 2;           // 从中间划分
+        MergeSort(A, low, mid);               // 对左半部分归并排序
+        MergeSort(A, mid + 1, high);          // 对右半部分归并排序
+        Merge(A, low, mid, high, high - low); // 归并
+    }
+}
