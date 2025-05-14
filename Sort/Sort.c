@@ -216,3 +216,18 @@ void MergeSort(int A[], int low, int high)
         Merge(A, low, mid, high, high - low); // 归并
     }
 }
+// 计数排序
+// A是输入数组（待排序数组），B是输出数组，n是A[]的长度，k反应A[]的取值范围
+void CountSort(int A[], int B[], int n, int k)
+{
+    int i, C[k];            // 辅助数组C的长度取决于待排序元素取值范围[0,k)
+    for (i = 0; i < k; i++) // 初始化计数数组C
+        C[i] = 0;
+    for (i = 0; i < n; i++) // 步骤一：遍历排序数组，统计每个关键字的出现次数
+        C[A[i]]++;
+    for (i = 1; i < k; i++)      // 步骤二：再次处理辅助数组，统计不大于i的元素个数
+        C[i] = C[i] + C[i - 1];  // C[i]保存的是小于等于i的元素个数
+    for (i = n - 1; i >= 0; i--) // 步骤三：利用辅助数组C实现计数排序（从后向前处理，保证稳定性）
+        C[A[i]] = C[A[i]] - 1;
+    B[C[A[i]]] = A[i]; // 将元素A[i]放入输出数组B[]的正确位置上
+}
